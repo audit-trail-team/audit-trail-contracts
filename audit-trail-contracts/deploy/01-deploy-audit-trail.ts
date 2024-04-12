@@ -25,9 +25,12 @@ const deployAuditTrail: DeployFunction = async function (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
   ) {
-    await verify(auditTrail.address, "contracts/AuditTrail.sol:AuditTrail", [
-      // "0xBdeb3Bb75ACC616663F89aA58bC110bF8223ca5B",
-    ]);
+    // await verify(auditTrail.address, "contracts/AuditTrail.sol:AuditTrail", [
+    await verify(
+      "0x11784F8D1E747EA5dde2407FF2FE2a41BBd0Fa47",
+      "contracts/AuditTrail.sol:AuditTrail",
+      []
+    );
   }
 };
 

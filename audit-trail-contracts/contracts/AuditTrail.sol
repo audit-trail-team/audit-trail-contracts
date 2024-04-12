@@ -7,17 +7,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract AuditTrail is AccessControl, Ownable {
 
     event AuditLogCreated(
-        uint256 agreementId,
-        address userAddress,
-        address providerAddress,
-        uint256 providerId,
-        string encApiKey,
-        string encConnectionString
+        string userNameEncrypted,
+        string documentHash,
+        uint256 timeStamp,
+        SignatureType sigType
     );
 
     enum SignatureType {
-        REGULAR,
-        SEAL
+        Seal,    
+        QES,
+        QSeal,
+        SES,
+        AES,
     }
 
     struct AuditLog {
@@ -27,15 +28,28 @@ contract AuditTrail is AccessControl, Ownable {
         SignatureType sigType;
     }
 
-    uint256 public agreementIdTotalCount;
-
     mapping(uint256 => AuditLog) public IdToAuditLog;
-    uint256 logCount;
+    uint256 public logCount;
     
-    string public constant CUSTOMER_NAME = "DocuSign";
+    string public constant CUSTOMER_NAME = "GLAUX GROUP DEMO";
 
     constructor() Ownable(msg.sender) {
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+    }
+
+    function createAuditLog(
+        string memory _userNameEncrypted,
+        string memory _documentHash,
+        uint256 _timeStamp,
+        SignatureType _sigType
+    ) public onlyOwner {
+        IdToAuditLog[logCount] = AuditLog(
+            _userNameEncrypted,
+            _documentHash,
+            _timeStamp,
+            _sigType
+        );
+        logCount++;
     }
 
 
@@ -49,5 +63,9 @@ contract AuditTrail is AccessControl, Ownable {
             auditLogArray[i] = IdToAuditLog[i];
         }
         return auditLogArray;
+    }
+
+    function getCustomerName() public pure returns (string memory) {
+        return CUSTOMER_NAME;
     }
 }

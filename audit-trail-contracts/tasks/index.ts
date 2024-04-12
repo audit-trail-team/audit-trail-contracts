@@ -1,4 +1,2 @@
-import "./singleMint";
-import "./addSkills";
+import "./createLog";
 import "./mintTokens";
-import "./blackjack/fulfillRandomWords";

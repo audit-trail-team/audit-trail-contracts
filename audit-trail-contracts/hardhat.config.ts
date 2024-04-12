@@ -12,8 +12,7 @@ import "solidity-coverage";
 import "hardhat-gui";
 
 import "./tasks/mintTokens";
-import "./tasks/registerProvider";
-import "./tasks/enterAgreement";
+import "./tasks/createLog";
 
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
