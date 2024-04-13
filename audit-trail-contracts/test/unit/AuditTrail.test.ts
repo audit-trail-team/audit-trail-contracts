@@ -12,12 +12,16 @@ describe("AuditTrail", function () {
 
     before(async () => {
       accounts = await ethers.getSigners();
-      auditTrail = (await (
-        await ethers.getContractFactory("AuditTrail")
-      ).deploy()) as unknown as AuditTrail;
+      let factory = await ethers.getContractFactory("AuditTrail");
+      auditTrail = (await factory.deploy()) as unknown as AuditTrail;
 
       const auditTrailAddress = await auditTrail.getAddress();
     });
+
+    it("check if the contract is deployed", async () => {
+      expect(auditTrail.address).to.not.equal(0);
+    });
+
 
     // it("check if enter agreement function is working", async () => {
     //   const tx = await auditTrail.enterAgreement(
