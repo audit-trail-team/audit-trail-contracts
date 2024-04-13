@@ -18,13 +18,13 @@ contract AuditTrail is AccessControl, Ownable {
         QES,
         QSeal,
         SES,
-        AES,
+        AES
     }
 
     struct AuditLog {
         string userNameEncrypted;
         string documentHash;
-        uint256 timeStamp;
+        uint64 timeStamp;
         SignatureType sigType;
     }
 
@@ -40,9 +40,9 @@ contract AuditTrail is AccessControl, Ownable {
     function createAuditLog(
         string memory _userNameEncrypted,
         string memory _documentHash,
-        uint256 _timeStamp,
+        uint64 _timeStamp,
         SignatureType _sigType
-    ) public onlyOwner {
+    ) public {
         IdToAuditLog[logCount] = AuditLog(
             _userNameEncrypted,
             _documentHash,
@@ -51,7 +51,6 @@ contract AuditTrail is AccessControl, Ownable {
         );
         logCount++;
     }
-
 
     function getAuditLogById(uint256 _Id) public view returns (AuditLog memory) {
         return IdToAuditLog[_Id];

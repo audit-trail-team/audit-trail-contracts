@@ -12,22 +12,27 @@ const deployAuditTrail: DeployFunction = async function (
 
   console.log("Audit Trail deployed by:", deployer);
 
-  const auditTrail = await deploy("AuditTrail", {
-    from: deployer,
-    args: [],
-    log: false,
-    // we need to wait if on a live network so we can verify properly
-    // waitConfirmations: networkConfig[chainId]?.blockConfirmations || 0,
-  });
-  console.log("AuditTrail deployed to:", auditTrail.address);
+  // const auditTrail = await deploy("AuditTrail", {
+  //   from: deployer,
+  //   args: [],
+  //   log: false,
+  //   // we need to wait if on a live network so we can verify properly
+  //   // waitConfirmations: networkConfig[chainId]?.blockConfirmations || 0,
+  //   waitConfirmations: 5,
+  // });
+  // console.log("AuditTrail deployed to:", auditTrail.address);
   console.log("AuditTrail deployed on network:", network.name);
   if (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
   ) {
-    // await verify(auditTrail.address, "contracts/AuditTrail.sol:AuditTrail", [
+    // await verify(
+    // auditTrail.address,
+    // "0x1A311038c57ECB5D0bd05681D8B7E56E9589C210",
+    // "contracts/AuditTrail.sol:AuditTrail",
+    // [
     await verify(
-      "0x11784F8D1E747EA5dde2407FF2FE2a41BBd0Fa47",
+      "0x36e6909E146E3c15d19c0A9A6fa6dDe649A96662",
       "contracts/AuditTrail.sol:AuditTrail",
       []
     );

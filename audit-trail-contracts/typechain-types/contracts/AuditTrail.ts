@@ -50,7 +50,6 @@ export interface AuditTrailInterface extends Interface {
       | "CUSTOMER_NAME"
       | "DEFAULT_ADMIN_ROLE"
       | "IdToAuditLog"
-      | "agreementIdTotalCount"
       | "createAuditLog"
       | "getAuditLogById"
       | "getAuditLogs"
@@ -58,6 +57,7 @@ export interface AuditTrailInterface extends Interface {
       | "getRoleAdmin"
       | "grantRole"
       | "hasRole"
+      | "logCount"
       | "owner"
       | "renounceOwnership"
       | "renounceRole"
@@ -88,10 +88,6 @@ export interface AuditTrailInterface extends Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "agreementIdTotalCount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "createAuditLog",
     values: [string, string, BigNumberish, BigNumberish]
   ): string;
@@ -119,6 +115,7 @@ export interface AuditTrailInterface extends Interface {
     functionFragment: "hasRole",
     values: [BytesLike, AddressLike]
   ): string;
+  encodeFunctionData(functionFragment: "logCount", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -154,10 +151,6 @@ export interface AuditTrailInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "agreementIdTotalCount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "createAuditLog",
     data: BytesLike
   ): Result;
@@ -179,6 +172,7 @@ export interface AuditTrailInterface extends Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "logCount", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
@@ -355,8 +349,6 @@ export interface AuditTrail extends BaseContract {
     "view"
   >;
 
-  agreementIdTotalCount: TypedContractMethod<[], [bigint], "view">;
-
   createAuditLog: TypedContractMethod<
     [
       _userNameEncrypted: string,
@@ -395,6 +387,8 @@ export interface AuditTrail extends BaseContract {
     [boolean],
     "view"
   >;
+
+  logCount: TypedContractMethod<[], [bigint], "view">;
 
   owner: TypedContractMethod<[], [string], "view">;
 
@@ -449,9 +443,6 @@ export interface AuditTrail extends BaseContract {
     "view"
   >;
   getFunction(
-    nameOrSignature: "agreementIdTotalCount"
-  ): TypedContractMethod<[], [bigint], "view">;
-  getFunction(
     nameOrSignature: "createAuditLog"
   ): TypedContractMethod<
     [
@@ -493,6 +484,9 @@ export interface AuditTrail extends BaseContract {
     [boolean],
     "view"
   >;
+  getFunction(
+    nameOrSignature: "logCount"
+  ): TypedContractMethod<[], [bigint], "view">;
   getFunction(
     nameOrSignature: "owner"
   ): TypedContractMethod<[], [string], "view">;
