@@ -21,18 +21,13 @@ const deployAuditTrail: DeployFunction = async function (
   //   waitConfirmations: 5,
   // });
   // console.log("AuditTrail deployed to:", auditTrail.address);
-  console.log("AuditTrail deployed on network:", network.name);
+  // console.log("AuditTrail deployed on network:", network.name);
   if (
     !developmentChains.includes(network.name) &&
     process.env.ETHERSCAN_API_KEY
   ) {
-    // await verify(
-    // auditTrail.address,
-    // "0x1A311038c57ECB5D0bd05681D8B7E56E9589C210",
-    // "contracts/AuditTrail.sol:AuditTrail",
-    // [
     await verify(
-      "0x36e6909E146E3c15d19c0A9A6fa6dDe649A96662",
+      "0xf1Cf036F937117499C3df9D54b0FCE186d820250",
       "contracts/AuditTrail.sol:AuditTrail",
       []
     );

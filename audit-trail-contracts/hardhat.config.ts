@@ -22,6 +22,7 @@ import "./tasks/createLog";
 
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "";
 const ARBITRUM_SEPOLIA_RPC_URL = process.env.ARBITRUM_SEPOLIA_RPC_URL || "";
+const ARBITRUM_RPC_URL = process.env.ARBITRUM_RPC_URL || "";
 const BASE_SEPOLIA_RPC_URL = process.env.BASE_SEPOLIA_RPC_URL || "";
 const CELO_RPC_URL = process.env.CELO_RPC_URL || "";
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
@@ -52,6 +53,11 @@ const config: HardhatUserConfig = {
       accounts: [PRIVATE_KEY],
       chainId: 421614,
     },
+    arbitrum: {
+      url: ARBITRUM_RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 42161,
+    },
     baseSepolia: {
       url: BASE_SEPOLIA_RPC_URL,
       accounts: [PRIVATE_KEY],
@@ -80,6 +86,7 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       arbitrumSepolia: ARBISCAN_API_KEY,
+      arbitrumOne: ARBISCAN_API_KEY,
       base: ETHERSCAN_API_KEY,
     },
   },
