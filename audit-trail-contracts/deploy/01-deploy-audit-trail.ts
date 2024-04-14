@@ -12,15 +12,15 @@ const deployAuditTrail: DeployFunction = async function (
 
   console.log("Audit Trail deployed by:", deployer);
 
-  // const auditTrail = await deploy("AuditTrail", {
-  //   from: deployer,
-  //   args: [],
-  //   log: false,
-  //   // we need to wait if on a live network so we can verify properly
-  //   // waitConfirmations: networkConfig[chainId]?.blockConfirmations || 0,
-  //   waitConfirmations: 5,
-  // });
-  // console.log("AuditTrail deployed to:", auditTrail.address);
+  const auditTrail = await deploy("AuditTrail", {
+    from: deployer,
+    args: [],
+    log: false,
+    // we need to wait if on a live network so we can verify properly
+    // waitConfirmations: networkConfig[chainId]?.blockConfirmations || 0,
+    waitConfirmations: !developmentChains.includes(network.name) ? 5 : 0,
+  });
+  console.log("AuditTrail deployed to:", auditTrail.address);
   console.log("AuditTrail deployed on network:", network.name);
   if (
     !developmentChains.includes(network.name) &&

@@ -1,36 +1,72 @@
 import { AuditTrail } from "./../../typechain-types/contracts/AuditTrail";
-import { assert, expect } from "chai";
-import { ContractTransaction } from "ethers";
+import { expect } from "chai";
 import { deployments, ethers, network } from "hardhat";
+import { encrypt, sha256 } from "../utils/encrypt_decrypt_hash";
+import { developmentChains } from "../../helper-hardhat-config"
+import { randomBytes } from "crypto";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
-import exp from "constants";
 
-describe("AuditTrail", function () {
-  describe("test setup to test something for audit trail", () => {
+
+!developmentChains.includes(network.name)
+  ? describe.skip
+  : describe("AuditTrail", function () {
     let auditTrail: AuditTrail;
-    let accounts: SignerWithAddress[];
+    let deployer: SignerWithAddress
 
-    before(async () => {
-      accounts = await ethers.getSigners();
-      let factory = await ethers.getContractFactory("AuditTrail");
-      auditTrail = (await factory.deploy()) as unknown as AuditTrail;
+    this.beforeEach(async () => {
+      let { get } = deployments
+      const accounts = await ethers.getSigners()
+      deployer = accounts[0]
 
-      const auditTrailAddress = await auditTrail.getAddress();
-    });
+      await deployments.fixture(["audit-trail"])
 
-    it("check if the contract is deployed", async () => {
-      expect(auditTrail.address).to.not.equal(0);
-    });
+      let auditTrailDeployment = await get("AuditTrail")
+      auditTrail = await ethers.getContractAt("AuditTrail", auditTrailDeployment.address)
+    })
+
+    it("create one audit log", async function () {
+      let logCount: number = Number(await auditTrail.logCount())
+      let username = "marvinator";
+      let encryptedUsername = encrypt(username, logCount)
+      let pdf = "My PDF"
+      let customerName = "Marvin"
+      let hashedPdf = sha256(pdf)
+      let timestamp = Math.floor(Date.now() / 1000)
+      let sigtype = 3
+
+      await auditTrail.createAuditLog(encryptedUsername, hashedPdf, customerName, timestamp, sigtype)
+    })
 
 
-    // it("check if enter agreement function is working", async () => {
-    //   const tx = await auditTrail.enterAgreement(
-    //     BigInt(1),
-    //     "0x6ae181072aBc10a4eE84724BE867c71E0d4C0471"
-    //   );
-    //   const receipt = await tx.wait();
-    //   console.log(receipt);
-    //   expect(receipt?.status).to.equal(1);
-    // });
+    it("create batch audit logs", async function () {
+      let logCount: number = Number(await auditTrail.logCount())
+      let encryptedUsernames = []
+      let hashedPdfs = []
+      let customerNames = []
+      let timestamps = []
+      let sigtypes = []
+      for (let i = 0; i < 16; i++) {
+        let username = randomBytes(8 + Math.floor(Math.random() * 8)).toString("hex");
+        let encryptedUsername = encrypt(username, logCount)
+        let pdf = `My PDF ${username}`
+        let hashedPdf = sha256(pdf)
+        let customerName = "username"
+        let timestamp = Math.floor(Date.now() / 1000)
+        let sigtype = 3
+        logCount += 1
+
+        encryptedUsernames.push(encryptedUsername)
+        hashedPdfs.push(hashedPdf)
+        customerNames.push(customerName)
+        timestamps.push(timestamp)
+        sigtypes.push(sigtype)
+      }
+
+      await auditTrail.batchCreateAuditLogs(encryptedUsernames, hashedPdfs, customerNames, timestamps, sigtypes)
+
+      expect(await auditTrail.logCount()).to.equal(logCount)
+
+    })
+
+
   });
-});
